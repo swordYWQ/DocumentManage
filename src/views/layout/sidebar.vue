@@ -56,6 +56,7 @@ export default {
 .sidebar {
   width: 200px;
   height: 100%;
+  float: left;
   background-color: #FAFAFA;
   border-top: 1px solid #DDDDDD;
   border-right: 1px solid #DDDDDD;
