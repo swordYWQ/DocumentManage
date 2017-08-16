@@ -24,6 +24,20 @@ const mutations = {
 }
 const actions = {}
 const getters = {
+  nowproject: (state) => {
+    let res = null
+    if (state.nowdoc) {
+      for (let i = 0; i < state.docList.length; i++) {
+        for (let j = 0; j < state.docList[i].children.length; j++) {
+          if (state.docList[i].children[j].id === state.nowdoc.id) {
+            res = state.docList[i]
+          }
+        }
+      }
+    }
+    return res
+  },
+  nowdoc: (state) => state.nowdoc,
   nowDocMarks: (state) => {
     let marks = ''
     state.docList.forEach((firstItem) => {

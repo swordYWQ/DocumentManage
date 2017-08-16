@@ -5,11 +5,11 @@
         <i class="iconfont icon-document"></i>文档</div>
       <div class="sidebar-header-item">
         <i class="iconfont icon-search"></i>搜索</div>
-      <div class="sidebar-header-item pull-right" @mouseover="isShowAddList=true" @mouseout="isShowAddList=false">
+      <div class="sidebar-header-item pull-right" @mouseover="isShowAddList=true" @mouseout="isShowAddList=false" v-if="username">
         <i class="iconfont icon-add"></i>
         <div class="add-list" v-show="isShowAddList">
-          <div class="add-list-item">新增项目</div>
-          <div class="add-list-item">新增文档</div>
+          <div class="add-list-item" @click="isShowAdd=true">新增项目</div>
+          <div class="add-list-item" @click="isShowAdd=true">新增文档</div>
         </div>
       </div>
     </div>
@@ -33,15 +33,24 @@
 </template>
 <script>
 import services from '../../services'
+import addDoc from '../modules/addDoc.vue'
 export default {
   name: 'sidebar',
+  components: {
+    addDoc
+  },
   data: function () {
     return {
       isShowAddList: false,
-      activeItem: 0
+      activeItem: 0,
+      type: 0,
+      isShowAdd: false
     }
   },
   computed: {
+    username: function () {
+      return this.$store.state.username
+    },
     docList: function () {
       return this.$store.state.docList
     }
@@ -68,6 +77,21 @@ export default {
     },
     selectDoc: function (item) {
       this.$store.commit('selectDoc', item)
+    },
+    addDoc: function (item) {
+      let params = {
+        doc_name: '',
+        parent_id: '',
+        desc: ''
+      }
+      services.addDoc(params).then((response) => {
+        if (response.data.code === 200) {
+          alert('操作成功!')
+          this.getDocList()
+        } else {
+          alert(response.data.message)
+        }
+      })
     }
   }
 }

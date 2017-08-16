@@ -73,7 +73,7 @@ export default {
     left: 50%;
     transform: translate(-50%, -50%);
     font-family: '微软雅黑';
-    padding: 20px 40px;
+    padding: 20px 30px 20px 10px;
     .login-header {
       font-size: 16px;
     }
@@ -90,6 +90,8 @@ export default {
         input {
           flex: 3;
           line-height: 30px;
+          padding:0 5px;
+          font-size:15px;
         }
       }
     }

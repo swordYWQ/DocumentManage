@@ -1,14 +1,14 @@
 <template>
   <div class="content">
     <div class="content-header">
-      <div class="document-title">项目介绍</div>
+      <div class="document-title">{{nowproject?nowproject.doc_name:''}}{{nowproject&&nowdoc?'-':''}}{{ nowdoc?nowdoc.doc_name:''}}</div>
   
       <div class="type-list" v-if="username">
         <div class="type-item" :class="{active:type==0}" @click="type=0">预览</div>
         <div class="type-item" :class="{active:type==1}" @click="type=1">编辑</div>
       </div>
   
-      <button v-if="username&&type!==0" class="save-btn">保存</button>
+      <button v-if="username&&type!==0" class="save-btn" @click="saveDoc">保存</button>
     </div>
     <div class="document-content">
       <div class="edit-content" v-if="type==1">
@@ -22,6 +22,7 @@
 import marked from 'marked'
 import _ from 'lodash'
 import { mapGetters } from 'vuex'
+import services from '../../services'
 export default {
   name: 'content',
   data: function () {
@@ -32,7 +33,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['nowDocMarks']),
+    ...mapGetters(['nowDocMarks', 'nowdoc', 'nowproject']),
     username: function () {
       return this.$store.state.username
     },
@@ -43,7 +44,25 @@ export default {
   methods: {
     update: _.debounce(function (e) {
       this.markString = e.target.value
-    }, 300)
+    }, 300),
+    saveDoc: function () {
+      let nowdoc = this.$store.state.nowdoc
+      if (nowdoc) {
+        let params = {
+          id: nowdoc.id,
+          mark_key: this.markString
+        }
+        services.editDoc(params).then(response => {
+          if (response.data.code === 200) {
+            alert('操作成功')
+          } else {
+            alert(response.data.message)
+          }
+        })
+      } else {
+        alert('请选择一个文档!')
+      }
+    }
   },
   watch: {
     username: function (v, ov) {
